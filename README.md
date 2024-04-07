@@ -16,6 +16,17 @@ pdm install --no-self --prod
 pdm install --no-self -d
 ```
 
+## Сборка образа
+
+```
+docker build -t app .
+```
+
+Запуск:
+```
+docker run --rm -t app
+```
+
 ## Работа с ветками
 
 main - стабильная ветка, develop - экспериментальная ветка, feature - изменения.
