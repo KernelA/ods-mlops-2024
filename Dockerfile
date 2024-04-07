@@ -4,32 +4,41 @@ FROM python:${PYTHON_VERSION}-buster as builder
 
 WORKDIR /home/app
 
-RUN python -m venv /opt/venv
+ARG PDM_CACHE=/opt/pdm/cache
 
-ENV PATH=/opt/venv/bin:${PATH}
+ENV PDM_CACHE_DIR=${PDM_CACHE}
 
-RUN pip install -U pip setuptools wheel && \
+RUN --mount=type=cache,id=pip-cache,target=/root/.cache/pip\
+    pip install -U pip wheel && \
     pip install pdm
 
+COPY ./pyproject.toml ./pdm.lock ./
+
 # Add adiitional instructions
-RUN --mount=type=cache,id=pip-cache,target=/root/.cache/pip \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    --mount=type=bind,source=pdm.lock,target=pdm.lock \
+RUN --mount=type=cache,id=pip-cache,target=${PDM_CACHE} \
     pdm install --prod --no-self --frozen-lockfile
 
-RUN --mount=type=bind,source=./ods_mlops,target./ods_mlops \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    --mount=type=bind,source=pdm.lock,target=pdm.lock \
+COPY ./README.md ./
+
+COPY ./ods_mlops ./ods_mlops
+
+RUN --mount=type=cache,id=pip-cache,target=${PDM_CACHE} \
     pdm install --prod --frozen-lockfile --no-editable
 
 FROM python:${PYTHON_VERSION}-slim
 
+ARG PROJECT_VENV_DIR=/home/app/.venv
+
+COPY --from=builder ${PROJECT_VENV_DIR} ${PROJECT_VENV_DIR}
+
+ENV PATH="${PROJECT_VENV_DIR}/bin:$PATH"
+
 ENV TZ="Europe/Moscow"
-
-COPY --from=builder /opt/venv /opt/venv
-
-ENV PATH=/opt/venv/bin:${PATH}
 
 WORKDIR /home/app
 
-COPY ./main.py ./
+ENV LOG_CONFIG=log_settings.yaml
+
+COPY ./main.py ./log_settings.yaml ./
+
+CMD python ./main.py
