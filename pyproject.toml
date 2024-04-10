@@ -19,6 +19,8 @@ dev = [
     "pre-commit~=3.7"
 ]
 
+[tool.ruff.lint]
+ignore = ["F401"]
 
 [tool.ruff]
 exclude = [
