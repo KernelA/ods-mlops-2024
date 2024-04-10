@@ -1,0 +1,25 @@
+name: Ruff linting
+
+on:
+    pull_request:
+        branches: ['master', 'develop']
+
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up PDM
+        uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependecies
+        run: pdm install -d --without default
+
+      - name: Lint
+        run: pdm run ruff check 
