@@ -1,4 +1,4 @@
-name: Ruff linting
+name: Package workflow
 
 on:
     pull_request:
