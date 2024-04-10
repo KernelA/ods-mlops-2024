@@ -1,0 +1,42 @@
+name: Package workflow
+
+on:
+    pull_request:
+        branches: ['master', 'develop']
+    
+    push:
+        branches: ['master']
+
+
+jobs:
+  build-and-publish-package:
+    runs-on: ubuntu-latest
+    permissions:
+        id-token: write
+
+    steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Set up PDM
+          uses: pdm-project/setup-pdm@v4
+          with:
+            cache: true
+            python-version: '3.9'
+
+        - name: Install dependecies
+          run: pdm install -d
+
+        - name: Lint
+          run: pdm run ruff check 
+
+        - name: Build
+          run: pdm build --no-sdist
+
+        - name: Publish release distributions to PyPI
+          if: ${{ github.ref_name == 'master' }}
+          uses: pypa/gh-action-pypi-publish@release/v1
+          with:
+            skip-existing: true
+            repository-url: https://test.pypi.org/legacy/
+            password: ${{ secrets.PYPI_TOKEN }}
