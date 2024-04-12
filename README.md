@@ -27,6 +27,14 @@ docker build -t app .
 docker run --rm -t app
 ```
 
+## PyPi
+
+[https://test.pypi.org/project/ods-mlops/](https://test.pypi.org/project/ods-mlops/)
+
+## Image registry
+
+[https://github.com/KernelA/ods-mlops-2024/pkgs/container/ods-mlops-2024](https://github.com/KernelA/ods-mlops-2024/pkgs/container/ods-mlops-2024)
+
 ## Работа с ветками
 
 main - стабильная ветка, develop - экспериментальная ветка, feature - изменения.
