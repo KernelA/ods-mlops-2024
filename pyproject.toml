@@ -33,7 +33,7 @@ dev = [
 ]
 
 [tool.ruff.lint]
-ignore = ["F401"]
+ignore = ["F401", "F403"]
 
 [tool.ruff]
 exclude = [
