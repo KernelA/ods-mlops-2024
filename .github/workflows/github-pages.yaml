@@ -4,12 +4,6 @@ on:
     workflow_dispatch:
     push:
       branches: master
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -21,7 +15,10 @@ jobs:
           name: github-pages
           url: ${{ steps.deployment.outputs.page_url }}
         permissions:
-            contents: write
+          contents: read
+          pages: write
+          id-token: write
+
         steps:
             - name: Check out repository
               uses: actions/checkout@v4
