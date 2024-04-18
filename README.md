@@ -16,6 +16,10 @@ pdm install --no-self --prod
 pdm install --no-self -d
 ```
 
+```
+pre-commit install
+```
+
 ## Сборка образа
 
 ```

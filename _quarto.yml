@@ -1,0 +1,14 @@
+title: "Report"
+project:
+  type: website
+  output-dir: docs
+  render:
+    - eda.ipynb
+  
+format:
+  html:
+    code-fold: true
+jupyter: python3
+execute:
+  freeze: auto
+  echo: false
