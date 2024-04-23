@@ -1,0 +1,19 @@
+numeric_cols: ["x_sp", "y_sp", "tree_dbh", "stump_diam"]
+target_col: "health"
+cat_cols: [
+            "curb_loc",
+            "steward",
+            "sidewalk",
+            "borocode",
+        ]
+bin_cols: [
+        "root_stone",
+        "root_grate",
+        "root_other",
+        "trunk_wire",
+        "trnk_light",
+        "trnk_other",
+        "brch_light",
+        "brch_shoe",
+        "brch_other",
+    ]

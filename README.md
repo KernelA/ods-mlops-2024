@@ -31,6 +31,11 @@ docker build -t app .
 docker run --rm -t app
 ```
 
+## Загрузка данных:
+```
+kaggle datasets download -d new-york-city/ny-2015-street-tree-census-tree-data --unzip -p ./data/raw
+```
+
 ## PyPi
 
 [https://test.pypi.org/project/ods-mlops/](https://test.pypi.org/project/ods-mlops/)

@@ -1,0 +1,13 @@
+hydra:
+  run:
+    dir: .
+  output_subdir: null
+
+defaults:
+  - base_preprocess
+  - data_info: base
+  - split_info: base
+  - _self_
+
+input_data: ???
+out_dir: ???
