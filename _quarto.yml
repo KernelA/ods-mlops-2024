@@ -4,10 +4,15 @@ project:
   output-dir: docs
   render:
     - eda.ipynb
+  resources: 
+    - "report/snake.html"
   
 format:
   html:
     code-fold: true
+    anchor-sections: true
+    include-in-header:
+      - text: <a href="report/snake.html">Snakemake report</a>
 jupyter: python3
 execute:
   freeze: auto

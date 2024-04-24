@@ -1,0 +1,12 @@
+hydra:
+  run:
+    dir: .
+  output_subdir: null
+
+defaults:
+  - base_train
+  - model: random_forest
+  - _self_
+
+input_dir: ???
+out_dir: ???

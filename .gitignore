@@ -141,3 +141,5 @@ data/
 /.quarto/
 out/
 docs/
+.snakemake/
+outputs/
