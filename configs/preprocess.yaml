@@ -5,7 +5,7 @@ hydra:
 
 defaults:
   - base_preprocess
-  - data_info: base
+  - data_info: all_features
   - split_info: base
   - _self_
 

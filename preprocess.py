@@ -51,25 +51,36 @@ def main(config: PreprocessConfig):
         random_state=config.split_info.seed,
     )
 
-    tr = compose.ColumnTransformer(
-        [
+    transforms = []
+
+    if config.data_info.numeric_cols:
+        transforms.append(
             (
                 "numeric",
                 preprocessing.StandardScaler(),
                 [data.columns.index(col) for col in config.data_info.numeric_cols],
             ),
+        )
+
+    if config.data_info.cat_cols:
+        transforms.append(
             (
                 "cat",
                 preprocessing.OneHotEncoder(),
                 [data.columns.index(col) for col in config.data_info.cat_cols],
             ),
+        )
+
+    if config.data_info.bin_cols:
+        transforms.append(
             (
                 "bool",
                 BooleanEncoder(),
                 [data.columns.index(col) for col in config.data_info.bin_cols],
-            ),
-        ],
-    )
+            )
+        )
+
+    tr = compose.ColumnTransformer(transforms)
 
     train = data.filter(pl.col("index").is_in(train_index))
     test = data.filter(pl.col("index").is_in(test_index))

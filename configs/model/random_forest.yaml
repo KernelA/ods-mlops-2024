@@ -1,2 +1,4 @@
 _target_: sklearn.ensemble.RandomForestClassifier
-max_depth: 8
+max_depth: 6
+n_estimators: 20
+class_weight: "balanced"

@@ -1,6 +1,9 @@
 rule all:
     input:
-        "data/model"
+        "data/model/all_features/log_reg",
+        "data/model/all_features/random_forest",
+        "data/model/numeric_only/log_reg",
+        "data/model/numeric_only/random_forest"
 
 rule convert_data:
     threads: 4
@@ -14,27 +17,29 @@ rule convert_data:
 
 rule preprocess:
     threads: 4
-    input: input_path = rules.convert_data.output.converted_data
+    input: 
+        "configs/data_info/{feature_set}.yaml",
+        input_path = rules.convert_data.output.converted_data
     output:
         report(
-           "data/processed/target_distr.png"
+           "data/processed/{feature_set}/target_distr.png"
         ),
-        preprocessed_files = expand(["data/processed/{name}_features.npy", "data/processed/{name}_target.npy"], name=["train", "test"]),
-        class_labels = "data/processed/class_labels.json"
+        preprocessed_files = expand(["data/processed/{feature_set}/{name}_features.npy", "data/processed/{feature_set}/{name}_target.npy"], name=["train", "test"], feature_set="{feature_set}"),
+        class_labels = "data/processed/{feature_set}/class_labels.json"
     shell:
-        "python ./preprocess.py input_data={input.input_path} out_dir=data/processed"
+        "python ./preprocess.py input_data={input.input_path} out_dir=data/processed/{wildcards.feature_set} data_info={wildcards.feature_set}"
 
 rule train:
     threads: 8
     input: 
-        rules.preprocess.output.preprocessed_files,
-        rules.preprocess.output.class_labels
+        "data/processed/{feature_set}/class_labels.json",
+        "configs/model/{model_name}.yaml"
     output:
         report(
-            directory("data/model"),
+            directory("data/model/{feature_set}/{model_name}"),
             patterns=["{name}.csv"],
             category="Final model"),
-        report("data/model/conf_matrix.png")
+        report("data/model/{feature_set}/{model_name}/conf_matrix.png"),
     shell:
-        "python ./train_model.py input_dir=data/processed out_dir=data/model"
+        "python ./train_model.py input_dir=data/processed/{wildcards.feature_set} out_dir=data/model/{wildcards.feature_set}/{wildcards.model_name} model={wildcards.model_name}"
 
