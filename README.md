@@ -1,6 +1,6 @@
 # ODS MLOps sample repo
 
-Линтер и форматтирование осуществляется с поомщью ruff.
+Линттнг и форматирование осуществляется с помощью ruff.
 
 ## Как запустить
 
@@ -16,11 +16,12 @@ pdm install --no-self --prod
 pdm install --no-self -d
 ```
 
+pre commit hooks:
 ```
 pre-commit install
 ```
 
-## Сборка образа
+### Сборка образа
 
 ```
 docker build -t app .
@@ -31,18 +32,34 @@ docker build -t app .
 docker run --rm -t app
 ```
 
+### PyPi
+
+[https://test.pypi.org/project/ods-mlops/](https://test.pypi.org/project/ods-mlops/)
+
+### Image registry
+
+[https://github.com/KernelA/ods-mlops-2024/pkgs/container/ods-mlops-2024](https://github.com/KernelA/ods-mlops-2024/pkgs/container/ods-mlops-2024)
+
 ## Загрузка данных:
 ```
 kaggle datasets download -d new-york-city/ny-2015-street-tree-census-tree-data --unzip -p ./data/raw
 ```
 
-## PyPi
+## Snakemake
 
-[https://test.pypi.org/project/ods-mlops/](https://test.pypi.org/project/ods-mlops/)
+Запуск pipeline в Snakemake:
+```
+snakemake --cores
+```
 
-## Image registry
+## quarto
 
-[https://github.com/KernelA/ods-mlops-2024/pkgs/container/ods-mlops-2024](https://github.com/KernelA/ods-mlops-2024/pkgs/container/ods-mlops-2024)
+Для получения HTML вывода из notebook:
+```
+snakemake --cores --report ./report/snake.html
+quarto render
+```
+
 
 ## Работа с ветками
 
