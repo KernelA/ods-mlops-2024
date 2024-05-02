@@ -1,0 +1,60 @@
+rule all:
+    input:
+        "data/lakefs/proc_ver1",
+        "data/lakefs/proc_ver2"
+
+rule create_repo:
+    output:
+        touch("data/lakefs/repo")
+    shell:
+        """
+            lakectl repo create lakefs://test local://test-data
+        """
+
+rule uplod_base_version:
+    input: 
+        "data/lakefs/repo",
+        input_data = "data/raw/socrata_metadata.json"
+    output:
+        touch("data/lakefs/ver1")
+    shell:
+        """
+            lakectl fs upload --verbose -s {input.input_data} lakefs://test/main/socrata_metadata.json
+            lakectl commit  --allow-empty-commit lakefs://test/main -m "Base version"
+        """
+    
+rule upload_new_version:
+    input: 
+        "data/lakefs/repo",
+        "data/lakefs/ver1",
+        input_data = "data/raw/socrata_metadata.json"
+    output:
+        touch("data/lakefs/ver2")
+    shell:
+        """
+            lakectl branch create lakefs://test/devel --source lakefs://test/main
+            python -c "import json; a = json.load(open('{input.input_data}', 
+            'r', encoding='utf-8')); print(json.dumps(a['columns'][0]), flush=True)" | lakectl fs upload -s - lakefs://test/devel/socrata_metadata.json
+            lakectl commit  lakefs://test/devel -m "Devel version"
+        """
+
+
+rule show_new_version:
+    input: 
+        "data/lakefs/ver2",
+    output:
+        touch("data/lakefs/proc_ver2")
+    shell:
+        """
+            lakectl fs cat lakefs://test/devel/socrata_metadata.json
+        """
+
+rule show_base_version:
+    input: 
+        "data/lakefs/ver1",
+    output:
+        touch("data/lakefs/proc_ver1")
+    shell:
+        """
+            lakectl fs cat lakefs://test/main/socrata_metadata.json
+        """

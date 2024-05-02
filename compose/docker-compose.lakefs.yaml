@@ -1,0 +1,19 @@
+services:
+    lakefs-server:
+      image: treeverse/lakefs:1.20
+      healthcheck:
+        test: curl --fail http://localhost:8000
+        start_interval: 2s
+        retries: 5
+      ports:
+        - '8000:8000'
+      environment:
+        LAKEFS_AUTH_ENCRYPT_SECRET_KEY: "sl29038237uhe232k"
+        LAKEFS_DATABASE_TYPE: "local"
+        LAKEFS_BLOCKSTORE_TYPE: local
+        LAKEFS_BLOCKSTORE_LOCAL_PATH: "~/lakefs/dev/data"
+        LAKEFS_BLOCKSTORE_S3_FORCE_PATH_STYLE: true
+        LAKEFS_INSTALLATION_USER_NAME: admin
+        LAKEFS_INSTALLATION_ACCESS_KEY_ID: asd23
+        LAKEFS_INSTALLATION_SECRET_ACCESS_KEY: df34
+        LAKECTL_SERVER_ENDPOINT_URL: http://localhost:8000

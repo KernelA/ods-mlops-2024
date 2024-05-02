@@ -60,6 +60,18 @@ snakemake --cores --report ./report/snake.html
 quarto render
 ```
 
+## LakeFS
+
+Запустить контейнер с сервисом:
+```
+docker compose -f ./compose/docker-compose.lakefs.yaml up -d
+```
+
+Выполнить шаги для выполнения базового сценария:
+```
+snakemake --cores --snakefile ./Snakefile.lakefs
+```
+
 
 ## Работа с ветками
 
