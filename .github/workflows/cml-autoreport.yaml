@@ -1,0 +1,64 @@
+name: CML autoreport
+
+on:
+  pull_request:
+    branches: [dvc-base-model]
+    paths:
+      - dvc.yaml
+      - dvc.lock
+  workflow_dispatch:
+
+jobs:
+  send-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache DVC
+        uses: actions/cache@v4
+        with:
+            path: ./.dvc/cache
+            key: dvc-cache
+
+      - name: Set up PDM
+        uses: pdm-project/setup-pdm@v4
+        with:
+            cache: true
+            python-version: '3.9'
+
+      - uses: iterative/setup-cml@v2
+
+      - name: Install dependencies
+        run: pdm install --prod
+
+      - name: Prepare DVC cache
+        env:
+          GDRIVE_CREDENTIALS_DATA: ${{ secrets.DVC_DATA_SECRET }}
+        run: |
+          dvc remote modify main --local gdrive_use_service_account true
+          dvc pull train
+
+      - name: Send CML report
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BASE_BRANCH: 'dvc-base-model'
+        run: |
+          echo << EOF >  report.md
+          # Metrics
+          EOF
+
+          dvc metrics diff ${{ env.BASE_BRANCH }} --md >> report.md
+
+          echo << EOF >> report.md
+          # Plots 
+          EOF
+
+          for splitType in ('train' 'val' 'split')
+          do
+            dvc plots diff --targets data/dvc/metrics/${splitType}/conf_matrix.csv --show-vega ${{ env.BASE_BRANCH }} | vl2png -s 1 > ${spliType}_plot.png
+            echo "## ${splitType}" >> report.md
+            echo '![](./plot.png "Confusion Matrix")' >> report.md
+          done
+
+          cml comment create report.md
