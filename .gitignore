@@ -136,7 +136,11 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-data/
+data/converted/
+data/lakefs/
+data/model/
+data/processed/
+data/raw/
 .vscode/
 /.quarto/
 out/

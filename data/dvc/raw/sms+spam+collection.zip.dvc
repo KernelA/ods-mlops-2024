@@ -1,0 +1,11 @@
+md5: 4318d2a11df3ea211593e28a6e168b59
+frozen: true
+deps:
+- checksum: '279629781467137165816127431184002598421'
+  hash: md5
+  path: https://archive.ics.uci.edu/static/public/228/sms+spam+collection.zip
+outs:
+- md5: ab53f9571d479ee677e7b283a06a661a
+  size: 203415
+  hash: md5
+  path: sms+spam+collection.zip
