@@ -1,9 +1,10 @@
+import json
 import pathlib
 
 import hydra
 import polars as pl
 from omegaconf import DictConfig
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, roc_auc_score
 
 from ods_mlops.sms_cls.model import BaseModel
 
@@ -15,7 +16,7 @@ def main(config: DictConfig):
 
     model.fit(vect_dir / "train")
 
-    for split_type in ("test", "val"):
+    for split_type in ("train", "test", "val"):
         predict = model.predict(vect_dir / split_type)
 
         conf_matrix = confusion_matrix(
@@ -32,21 +33,16 @@ def main(config: DictConfig):
             conf_matrix,
             class_labels,
         )
-        data = pl.concat([pl.DataFrame({"class": data.columns}), data], how="horizontal")
 
         metric_dir = pathlib.Path(config.data.metrics_dir) / split_type
         metric_dir.mkdir(parents=True, exist_ok=True)
-        data.write_csv(metric_dir / "conf_matrix.csv")
 
-    # ax = sea.heatmap(
-    #     matrix,
-    #     xticklabels=class_labels,
-    #     yticklabels=class_labels,
-    #     annot=True,
-    #     square=True,
-    #     cmap=sea.color_palette("coolwarm", as_cmap=True),
-    # )
-    # ax.get_figure().savefig(out_dir / "conf_matrix.png")
+        roc_auc = roc_auc_score(predict.true_labels, predict.predicted_lables)
+
+        with open(metric_dir / "roc_auc.json", "w", encoding="utf-8") as f:
+            json.dump({f"{split_type}_roc_auc": roc_auc}, f)
+
+        data.write_json(metric_dir / "conf_matrix.json", row_oriented=True)
 
 
 if __name__ == "__main__":
