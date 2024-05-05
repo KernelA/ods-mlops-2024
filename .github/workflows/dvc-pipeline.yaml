@@ -24,7 +24,8 @@ jobs:
         run: pdm install --prod
 
       - name: Pipeline
-        run: pdm run dvc repro train
+        run: |
+            pdm run dvc repro --pull train
     
       - name: Check file
         run: git status -s
