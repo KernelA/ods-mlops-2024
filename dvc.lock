@@ -40,8 +40,8 @@ stages:
     deps:
     - path: ./sms_cls.py
       hash: md5
-      md5: ada71f9bb9eab6c4d976b2b212e3c7f9
-      size: 2193
+      md5: c70ac4abae8e3ba37e49ed793f6b3533
+      size: 2217
     - path: data/dvc/vectorized
       hash: md5
       md5: dde98c322a358ab1dd69c1afe0cada58.dir
