@@ -1,2 +1,6 @@
 [cache]
     type = "reflink,hardlink,symlink"
+[hydra]
+    enabled = true
+    config_dir = configs_sms
+    config_name = train

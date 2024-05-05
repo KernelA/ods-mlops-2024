@@ -1,0 +1,11 @@
+hydra:
+  run:
+    dir: .
+  output_subdir: null
+
+defaults:
+  - split_info: base
+  - data: sms
+  - vectorizer: tfidf
+  - model: sklearn_est
+  - _self_

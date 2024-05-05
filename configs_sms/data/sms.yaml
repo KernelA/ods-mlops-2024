@@ -1,0 +1,8 @@
+protoocl: zip://
+raw_data_path: data/dvc/raw/sms+spam+collection.zip
+split_dir: data/dvc/data
+vectorized_dir:  data/dvc/vectorized
+metrics_dir: data/dvc/metrics
+class_mapping:
+  spam: 1
+  ham: 0

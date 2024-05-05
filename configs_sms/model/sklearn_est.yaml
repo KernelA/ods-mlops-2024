@@ -1,0 +1,6 @@
+defaults:
+  - estimator: log_reg
+
+_target_: 'ods_mlops.sms_cls.model.SkCls'
+vectorizer: ${vectorizer}
+estimator: ${.estimator}

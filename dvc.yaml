@@ -1,0 +1,24 @@
+stages:
+  split_data:
+    cmd: python ./sms_split_data.py
+    deps:
+    - ./sms_split_data.py
+    - ${data.raw_data_path}
+    outs:
+    - ${data.split_dir}
+
+  preprocess:
+    cmd: python ./sms_preprocess.py
+    deps:
+      - ./sms_preprocess.py
+      - ${data.split_dir}
+    outs:
+      - ${data.vectorized_dir}
+
+  train:
+    cmd: python ./sms_cls.py
+    deps:
+      - ./sms_cls.py
+      - ${data.vectorized_dir}
+    metrics:
+      - ${metrics_dir}/conf_matrix.csv
