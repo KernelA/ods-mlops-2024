@@ -1,0 +1,29 @@
+name: CML autoreport
+
+on:
+  workflow_dispatch:
+
+jobs:
+  send-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PDM
+        uses: pdm-project/setup-pdm@v4
+        with:
+            cache: true
+            python-version: '3.9'
+
+      - uses: iterative/setup-cml@v2
+
+      - name: Install dependencies
+        run: pdm install --prod
+
+      - name: Pipeline
+        run: dvc repro train
+    
+      - name: Check file
+        run: git status -s
+        
