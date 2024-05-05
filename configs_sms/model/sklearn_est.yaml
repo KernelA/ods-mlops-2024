@@ -1,6 +1,7 @@
 defaults:
-  - estimator: log_reg
+  - estimator@inner_est: log_reg
+  - _self_
 
 _target_: 'ods_mlops.sms_cls.model.SkCls'
 vectorizer: ${vectorizer}
-estimator: ${.estimator}
+estimator: ${.inner_est}

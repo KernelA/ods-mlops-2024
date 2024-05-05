@@ -1,0 +1,37 @@
+schema: '2.0'
+stages:
+  split_data:
+    cmd: python ./sms_split_data.py
+    deps:
+    - path: ./sms_split_data.py
+      hash: md5
+      md5: b7e01db2dfdde0d8a771c9825061c4db
+      size: 1440
+    - path: data/dvc/raw/sms+spam+collection.zip
+      hash: md5
+      md5: ab53f9571d479ee677e7b283a06a661a
+      size: 203415
+    outs:
+    - path: data/dvc/data
+      hash: md5
+      md5: bb73bf3f9ed3697ed088eae887147d62.dir
+      size: 210389
+      nfiles: 3
+  preprocess:
+    cmd: python ./sms_preprocess.py
+    deps:
+    - path: ./sms_preprocess.py
+      hash: md5
+      md5: 9d6419d94edf02596890c053dfb09e32
+      size: 953
+    - path: data/dvc/data
+      hash: md5
+      md5: bb73bf3f9ed3697ed088eae887147d62.dir
+      size: 210389
+      nfiles: 3
+    outs:
+    - path: data/dvc/vectorized
+      hash: md5
+      md5: dde98c322a358ab1dd69c1afe0cada58.dir
+      size: 639132
+      nfiles: 6

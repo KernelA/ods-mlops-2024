@@ -1,5 +1,5 @@
-protoocl: zip://
 raw_data_path: data/dvc/raw/sms+spam+collection.zip
+fsspec_path: zip://SMSSpamCollection::file://${.raw_data_path}
 split_dir: data/dvc/data
 vectorized_dir:  data/dvc/vectorized
 metrics_dir: data/dvc/metrics

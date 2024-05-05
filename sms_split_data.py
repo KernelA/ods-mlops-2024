@@ -29,17 +29,17 @@ def main(config: DictConfig):
     out_dir = pathlib.Path(config.data.split_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    with fsspec.open(config.protocol + config.raw_data_path, "rt", encoding="utf-8") as f:
+    with fsspec.open(config.data.fsspec_path, "rt", encoding="utf-8") as f:
         messages = extract_data(f, config.data.class_mapping)
 
     train, not_test = split_data(messages, config.split_info.train_size, config.split_info.seed)
-    train.write_parquet(out_dir / "train.paqruet")
+    train.write_parquet(out_dir / "train.parquet")
     del train
 
     val, test = split_data(not_test, config.split_info.val_size, config.split_info.seed)
 
-    test.write_parquet(out_dir / "test.paqruet")
-    val.write_parquet(out_dir / "val.paqruet")
+    test.write_parquet(out_dir / "test.parquet")
+    val.write_parquet(out_dir / "val.parquet")
 
 
 if __name__ == "__main__":

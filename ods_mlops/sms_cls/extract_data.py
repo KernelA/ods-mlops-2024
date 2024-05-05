@@ -11,7 +11,7 @@ def extract_data(file_object: io.TextIOWrapper, class_mapping: dict) -> pl.DataF
         if not line:
             continue
         label, text = line.split("\t", maxsplit=1)
-        messages.append((label.strip().lower(), normalize(text, "NFKD")))
+        messages.append((label.strip().lower(), normalize("NFKD", text)))
 
     data = pl.from_records(messages, schema={"target": pl.String, "text": pl.String})
-    return data.select(pl.col("target").map_dict(class_mapping, return_dtype=pl.Int8))
+    return data.with_columns(pl.col("target").map_dict(class_mapping, return_dtype=pl.Int8))
