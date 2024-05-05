@@ -8,7 +8,7 @@ on:
         - dvc.yaml
 
 jobs:
-  send-report:
+  run-pipeline:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,13 +20,11 @@ jobs:
             cache: true
             python-version: '3.10'
 
-      - uses: iterative/setup-cml@v2
-
       - name: Install dependencies
         run: pdm install --prod
 
       - name: Pipeline
-        run: dvc repro train
+        run: pdm run dvc repro train
     
       - name: Check file
         run: git status -s
