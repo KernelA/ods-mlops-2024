@@ -11,30 +11,32 @@ from ods_mlops.sms_cls.model import BaseModel
 @hydra.main(config_path="configs_sms", config_name="train", version_base="1.3")
 def main(config: DictConfig):
     vect_dir = pathlib.Path(config.data.vectorized_dir)
-    model: BaseModel = hydra.utils.instantiate(config.model)
+    model: BaseModel = hydra.utils.instantiate(config.model.cls)
 
     model.fit(vect_dir / "train")
-    val_predict = model.predict(vect_dir / "val")
 
-    conf_matrix = confusion_matrix(
-        val_predict.true_labels,
-        val_predict.predicted_lables,
-        normalize="all",
-    )
+    for split_type in ("test", "val"):
+        predict = model.predict(vect_dir / split_type)
 
-    class_labels = list(
-        map(lambda x: x[0], sorted(config.data.class_mapping.items(), key=lambda x: x[1]))
-    )
+        conf_matrix = confusion_matrix(
+            predict.true_labels,
+            predict.predicted_lables,
+            normalize="all",
+        )
 
-    data = pl.from_numpy(
-        conf_matrix,
-        class_labels,
-    )
-    data = pl.concat([pl.DataFrame({"class": data.columns}), data], how="horizontal")
+        class_labels = list(
+            map(lambda x: x[0], sorted(config.data.class_mapping.items(), key=lambda x: x[1]))
+        )
 
-    metric_dir = pathlib.Path(config.data.metrics_dir)
-    metric_dir.mkdir(parents=True, exist_ok=True)
-    data.write_csv(metric_dir / "conf_matrix.csv")
+        data = pl.from_numpy(
+            conf_matrix,
+            class_labels,
+        )
+        data = pl.concat([pl.DataFrame({"class": data.columns}), data], how="horizontal")
+
+        metric_dir = pathlib.Path(config.data.metrics_dir) / split_type
+        metric_dir.mkdir(parents=True, exist_ok=True)
+        data.write_csv(metric_dir / "conf_matrix.csv")
 
     # ax = sea.heatmap(
     #     matrix,

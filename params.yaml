@@ -14,16 +14,17 @@ data:
 vectorizer:
   _target_: ods_mlops.sms_cls.vectorizer.TfIdfVectorizer
 model:
-  inner_est:
+  inner_estimator:
     _target_: sklearn.linear_model.LogisticRegression
     random_state: 123324
     C: 100
     class_weight: balanced
-  _target_: ods_mlops.sms_cls.model.SkCls
-  vectorizer:
-    _target_: ods_mlops.sms_cls.vectorizer.TfIdfVectorizer
-  estimator:
-    _target_: sklearn.linear_model.LogisticRegression
-    random_state: 123324
-    C: 100
-    class_weight: balanced
+  cls:
+    _target_: ods_mlops.sms_cls.model.SkCls
+    vectorizer:
+      _target_: ods_mlops.sms_cls.vectorizer.TfIdfVectorizer
+    estimator:
+      _target_: sklearn.linear_model.LogisticRegression
+      random_state: 123324
+      C: 100
+      class_weight: balanced

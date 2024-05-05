@@ -21,4 +21,5 @@ stages:
       - ./sms_cls.py
       - ${data.vectorized_dir}
     metrics:
-      - ${data.metrics_dir}/conf_matrix.csv
+      - ${data.metrics_dir}/val/conf_matrix.csv
+      - ${data.metrics_dir}/test/conf_matrix.csv

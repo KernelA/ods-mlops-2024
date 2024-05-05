@@ -35,3 +35,24 @@ stages:
       md5: dde98c322a358ab1dd69c1afe0cada58.dir
       size: 639132
       nfiles: 6
+  train:
+    cmd: python ./sms_cls.py
+    deps:
+    - path: ./sms_cls.py
+      hash: md5
+      md5: 7c3f93a59568b40e02029becb5d6aef5
+      size: 1514
+    - path: data/dvc/vectorized
+      hash: md5
+      md5: dde98c322a358ab1dd69c1afe0cada58.dir
+      size: 639132
+      nfiles: 6
+    outs:
+    - path: data/dvc/metrics/test/conf_matrix.csv
+      hash: md5
+      md5: 493777d89a77a6cd588e280efc6381d9
+      size: 104
+    - path: data/dvc/metrics/val/conf_matrix.csv
+      hash: md5
+      md5: 9a33954f9cf901ad1605b4b689018f98
+      size: 105
