@@ -21,18 +21,18 @@ stages:
       - ./sms_cls.py
       - ${data.vectorized_dir}
     plots:
-      - ${data.metrics_dir}/val/conf_matrix.json:
+      - ${data.metrics_dir}/val/conf_matrix.csv:
           template: confusion
-          x: actual
-          y: predicted
-      - ${data.metrics_dir}/test/conf_matrix.json:
+          x: predicted
+          y: actual
+      - ${data.metrics_dir}/test/conf_matrix.csv:
           template: confusion
-          x: actual
-          y: predicted
-      - ${data.metrics_dir}/train/conf_matrix.json:
+          x: predicted
+          y: actual
+      - ${data.metrics_dir}/train/conf_matrix.csv:
           template: confusion
-          x: actual
-          y: predicted
+          x: predicted
+          y: actual
     metrics:
       - ${data.metrics_dir}/val/roc_auc.json
       - ${data.metrics_dir}/test/roc_auc.json

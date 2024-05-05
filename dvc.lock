@@ -40,34 +40,34 @@ stages:
     deps:
     - path: ./sms_cls.py
       hash: md5
-      md5: d29956c1e9e90f5afe5e40cda09c5e96
-      size: 1413
+      md5: aaaff8aa7319afc2f67179feacb07de6
+      size: 1391
     - path: data/dvc/vectorized
       hash: md5
       md5: dde98c322a358ab1dd69c1afe0cada58.dir
       size: 639132
       nfiles: 6
     outs:
-    - path: data/dvc/metrics/test/conf_matrix.json
+    - path: data/dvc/metrics/test/conf_matrix.csv
       hash: md5
-      md5: 50ce17c92476e1b70d702b178f5cd081
-      size: 111
+      md5: f13c7e83a655b2563e2849cf766d2c58
+      size: 8319
     - path: data/dvc/metrics/test/roc_auc.json
       hash: md5
       md5: 48aa561f083da87de949d43cc7d766cd
       size: 36
-    - path: data/dvc/metrics/train/conf_matrix.json
+    - path: data/dvc/metrics/train/conf_matrix.csv
       hash: md5
-      md5: 8ab66ab9dc53113beacac504024a66d8
-      size: 95
+      md5: 71bddc92d7faa72c1918f1b30f3f4296
+      size: 32277
     - path: data/dvc/metrics/train/roc_auc.json
       hash: md5
       md5: 74e6f61078383acc47c087e873df8512
       size: 37
-    - path: data/dvc/metrics/val/conf_matrix.json
+    - path: data/dvc/metrics/val/conf_matrix.csv
       hash: md5
-      md5: 4ca15b9f6efae514b4e46a68d25c5b57
-      size: 112
+      md5: a55c94cb93c3466143aceda1a5f68a5d
+      size: 5542
     - path: data/dvc/metrics/val/roc_auc.json
       hash: md5
       md5: 26b818c02cad7d2055d990f894832639
