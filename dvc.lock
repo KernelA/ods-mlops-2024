@@ -1,8 +1,12 @@
 schema: '2.0'
 stages:
   split_data:
-    cmd: python ./sms_split_data.py
+    cmd: python ./sms_split_data.py -cd . -cn params
     deps:
+    - path: ./params.yaml
+      hash: md5
+      md5: f00d90a636950af357c51ee9912f6aa0
+      size: 825
     - path: ./sms_split_data.py
       hash: md5
       md5: b7e01db2dfdde0d8a771c9825061c4db
@@ -18,8 +22,12 @@ stages:
       size: 210389
       nfiles: 3
   preprocess:
-    cmd: python ./sms_preprocess.py
+    cmd: python ./sms_preprocess.py -cd . -cn params
     deps:
+    - path: ./params.yaml
+      hash: md5
+      md5: f00d90a636950af357c51ee9912f6aa0
+      size: 825
     - path: ./sms_preprocess.py
       hash: md5
       md5: 9d6419d94edf02596890c053dfb09e32
@@ -36,8 +44,12 @@ stages:
       size: 639132
       nfiles: 6
   train:
-    cmd: python ./sms_cls.py
+    cmd: python ./sms_cls.py -cd . -cn params
     deps:
+    - path: ./params.yaml
+      hash: md5
+      md5: f00d90a636950af357c51ee9912f6aa0
+      size: 825
     - path: ./sms_cls.py
       hash: md5
       md5: c70ac4abae8e3ba37e49ed793f6b3533
