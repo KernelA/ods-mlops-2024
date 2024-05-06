@@ -25,7 +25,7 @@ jobs:
 
       - name: Pipeline
         run: |
-            pdm run dvc pull data/dvc/raw/sms+spam+collection.zip.dvc
+            pdm run dvc update data/dvc/raw/sms+spam+collection.zip.dvc
             pdm run dvc repro train
     
       - name: Check file
