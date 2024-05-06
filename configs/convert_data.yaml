@@ -1,0 +1,9 @@
+hydra:
+  run:
+    dir: .
+  output_subdir: null
+
+defaults:
+  - base_convert
+  - data_convert: parquet
+  - _self_

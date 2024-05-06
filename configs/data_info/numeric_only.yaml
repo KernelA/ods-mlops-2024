@@ -1,0 +1,4 @@
+numeric_cols: ["x_sp", "y_sp", "tree_dbh", "stump_diam"]
+target_col: "health"
+cat_cols: []
+bin_cols: []

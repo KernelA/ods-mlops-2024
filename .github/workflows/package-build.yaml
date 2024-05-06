@@ -35,8 +35,8 @@ jobs:
 
         - name: Publish release distributions to PyPI
           if: ${{ github.ref_name == 'master' }}
-          uses: pypa/gh-action-pypi-publish@release/v1
-          with:
-            skip-existing: true
-            repository-url: https://test.pypi.org/legacy/
-            password: ${{ secrets.PYPI_TOKEN }}
+          env:
+            PDM_PUBLISH_REPO: https://test.pypi.org/legacy/
+            PDM_PUBLISH_USERNAME: ${{ secrets.PYPI_USER }}
+            PDM_PUBLISH_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+          run: pdm publish --skip-existing
