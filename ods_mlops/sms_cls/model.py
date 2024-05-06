@@ -11,7 +11,8 @@ from .vectorizer import BaseVectorizer
 
 class Predict(NamedTuple):
     true_labels: np.ndarray
-    predicted_lables: np.ndarray
+    predicted_scores: np.ndarray
+    predicted_labels: np.ndarray
 
 
 class BaseModel(ABC):
@@ -54,7 +55,8 @@ class SkCls(BaseModel):
 
     def predict(self, data_dir: pathlib.Path):
         features, target = self.vectorizer.load_data(data_dir)
-        return Predict(target, self.estimator.predict(features))
+        scores = self.estimator.predict_proba(features)[:, 1]
+        return Predict(target, scores, np.where(scores > 0.5, 1, 0))
 
     @staticmethod
     def load(data_dir: pathlib.Path):

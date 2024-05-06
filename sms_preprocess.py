@@ -1,5 +1,9 @@
 import pathlib
 
+import sklearnex
+
+sklearnex.patch_sklearn()
+
 import hydra
 import polars as pl
 from omegaconf import DictConfig
