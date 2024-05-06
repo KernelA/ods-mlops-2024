@@ -1,0 +1,4 @@
+_target_: 'ods_mlops.sms_cls.vectorizer.SVDVectorizer'
+n_components: 300
+n_iter: 6
+random_state: 23239
