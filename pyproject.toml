@@ -22,6 +22,8 @@ dependencies = [
     "pyarrow~=15.0.1",
     "mplcairo>=0.5",
     "seaborn~=0.13.2",
+    "dvc[gdrive]~=3.50",
+    "fsspec~=2024.3.0",
 ]
 
 [project.optional-dependencies]
