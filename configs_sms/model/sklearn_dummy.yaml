@@ -1,0 +1,8 @@
+defaults:
+  - inner_estimator: dummy
+  - _self_
+
+cls:
+  _target_: 'ods_mlops.sms_cls.model.SkCls'
+  vectorizer: ${vectorizer}
+  estimator: ${..inner_estimator}

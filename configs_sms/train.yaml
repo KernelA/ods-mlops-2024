@@ -7,5 +7,5 @@ defaults:
   - split_info: base
   - data: sms
   - vectorizer: tfidf
-  - model: sklearn_est
+  - model: sklearn_logreg
   - _self_
