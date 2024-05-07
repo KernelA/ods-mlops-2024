@@ -39,7 +39,7 @@ jobs:
           GDRIVE_CREDENTIALS_DATA: ${{ secrets.DVC_DATA_SECRET }}
         run: |
           pdm run dvc remote modify main --local gdrive_use_service_account true
-          pdm run dvc pull train
+          pdm run dvc pull --run-cache train
 
       - name: Send CML report
         env:
