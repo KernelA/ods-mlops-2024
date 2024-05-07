@@ -58,7 +58,8 @@ jobs:
 
           for splitType in 'train' 'val' 'split'
           do
-            pdm run dvc plots diff --targets data/dvc/metrics/${splitType}/conf_matrix.csv --show-vega ${{ env.BASE_BRANCH }} | vl2png -s 1 > ${spliType}_plot.png
+            pdm run dvc plots diff --targets data/dvc/metrics/${splitType}/conf_matrix.csv --show-vega ${{ env.BASE_BRANCH }} > vega.json
+            vl2png -s 1 vega.json > ${spliType}_plot.png
             echo "## ${splitType}" >> report.md
             echo '![](./plot.png "Confusion Matrix")' >> report.md
           done
