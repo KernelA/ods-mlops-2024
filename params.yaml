@@ -12,19 +12,29 @@ data:
     spam: 1
     ham: 0
 vectorizer:
-  _target_: ods_mlops.sms_cls.vectorizer.TfIdfVectorizer
+  _target_: ods_mlops.sms_cls.vectorizer.SVDVectorizer
+  n_components: 300
+  n_iter: 6
+  random_state: 23239
 model:
   inner_estimator:
-    _target_: sklearn.linear_model.LogisticRegression
-    random_state: 123324
-    C: 100
+    _target_: sklearn.ensemble.RandomForestClassifier
+    n_estimators: 100
+    max_depth: 6
+    random_state: 292392340
+    n_jobs: -1
     class_weight: balanced
   cls:
     _target_: ods_mlops.sms_cls.model.SkCls
     vectorizer:
-      _target_: ods_mlops.sms_cls.vectorizer.TfIdfVectorizer
+      _target_: ods_mlops.sms_cls.vectorizer.SVDVectorizer
+      n_components: 300
+      n_iter: 6
+      random_state: 23239
     estimator:
-      _target_: sklearn.linear_model.LogisticRegression
-      random_state: 123324
-      C: 100
+      _target_: sklearn.ensemble.RandomForestClassifier
+      n_estimators: 100
+      max_depth: 6
+      random_state: 292392340
+      n_jobs: -1
       class_weight: balanced
