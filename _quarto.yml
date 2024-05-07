@@ -4,6 +4,7 @@ project:
   output-dir: docs
   render:
     - eda.ipynb
+    - dvc-compare-models.ipynb
   resources: 
     - "report/snake.html"
   
@@ -13,6 +14,7 @@ format:
     anchor-sections: true
     include-in-header:
       - text: <a href="report/snake.html">Snakemake report</a>
+      - text: <a href="dvc-compare-models.html">DVC compare models</a>
 jupyter: python3
 execute:
   freeze: auto
