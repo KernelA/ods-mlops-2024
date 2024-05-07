@@ -1,0 +1,174 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "data": {
+        "values": "<DVC_METRIC_DATA>"
+    },
+    "title": {
+        "text": "<DVC_METRIC_TITLE>",
+        "anchor": "middle"
+    },
+    "facet": {
+        "column": {
+            "field": "rev",
+            "sort": []
+        },
+        "row": "<DVC_METRIC_ROW>"
+    },
+    "params": [
+        {
+            "name": "showValues",
+            "value": true,
+            "bind": {
+                "input": "checkbox"
+            }
+        }
+    ],
+    "spec": {
+        "transform": [
+            {
+                "aggregate": [
+                    {
+                        "op": "count",
+                        "as": "xy_count"
+                    }
+                ],
+                "groupby": [
+                    "<DVC_METRIC_Y>",
+                    "<DVC_METRIC_X>"
+                ]
+            },
+            {
+                "impute": "xy_count",
+                "groupby": "<DVC_METRIC_GROUP_BY_Y>",
+                "key": "<DVC_METRIC_X>",
+                "value": 0
+            },
+            {
+                "impute": "xy_count",
+                "groupby": "<DVC_METRIC_GROUP_BY_X>",
+                "key": "<DVC_METRIC_Y>",
+                "value": 0
+            },
+            {
+                "joinaggregate": [
+                    {
+                        "op": "max",
+                        "field": "xy_count",
+                        "as": "max_count"
+                    }
+                ],
+                "groupby": []
+            },
+            {
+                "calculate": "datum.xy_count / datum.max_count",
+                "as": "percent_of_max"
+            }
+        ],
+        "encoding": {
+            "x": {
+                "field": "<DVC_METRIC_X>",
+                "type": "nominal",
+                "sort": "ascending",
+                "title": "<DVC_METRIC_X_LABEL>"
+            },
+            "y": {
+                "field": "<DVC_METRIC_Y>",
+                "type": "nominal",
+                "sort": "ascending",
+                "title": "<DVC_METRIC_Y_LABEL>"
+            }
+        },
+        "layer": [
+            {
+                "mark": "rect",
+                "width": "<DVC_METRIC_PLOT_WIDTH>",
+                "height": "<DVC_METRIC_PLOT_HEIGHT>",
+                "encoding": {
+                    "color": {
+                        "field": "xy_count",
+                        "type": "quantitative",
+                        "title": "",
+                        "scale": {
+                            "domainMin": 0,
+                            "nice": true
+                        }
+                    }
+                }
+            },
+            {
+                "selection": {
+                    "label": {
+                        "type": "single",
+                        "on": "mouseover",
+                        "encodings": [
+                            "x",
+                            "y"
+                        ],
+                        "empty": "none",
+                        "clear": "mouseout"
+                    }
+                },
+                "mark": "rect",
+                "encoding": {
+                    "tooltip": [
+                        {
+                            "field": "<DVC_METRIC_X>",
+                            "type": "nominal"
+                        },
+                        {
+                            "field": "<DVC_METRIC_Y>",
+                            "type": "nominal"
+                        },
+                        {
+                            "field": "xy_count",
+                            "type": "quantitative"
+                        }
+                    ],
+                    "opacity": {
+                        "condition": {
+                            "selection": "label",
+                            "value": 1
+                        },
+                        "value": 0
+                    }
+                }
+            },
+            {
+                "transform": [
+                    {
+                        "filter": {
+                            "selection": "label"
+                        }
+                    }
+                ],
+                "layer": [
+                    {
+                        "mark": {
+                            "type": "rect",
+                            "color": "lightpink"
+                        }
+                    }
+                ]
+            },
+            {
+                "mark": "text",
+                "encoding": {
+                    "text": {
+                        "condition": {
+                            "param": "showValues",
+                            "field": "xy_count",
+                            "type": "quantitative"
+                        }
+                    },
+                    "color": {
+                        "condition": {
+                            "test": "datum.percent_of_max > 0.5",
+                            "value": "white"
+                        },
+                        "value": "black"
+                    }
+                }
+            }
+        ]
+    }
+}
