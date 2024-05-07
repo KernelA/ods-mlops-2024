@@ -1,0 +1,30 @@
+split_info:
+  seed: 823787234
+  train_size: 0.7
+  val_size: 0.4
+data:
+  raw_data_path: data/dvc/raw/sms+spam+collection.zip
+  fsspec_path: zip://SMSSpamCollection::file://data/dvc/raw/sms+spam+collection.zip
+  split_dir: data/dvc/data
+  vectorized_dir: data/dvc/vectorized
+  metrics_dir: data/dvc/metrics
+  class_mapping:
+    spam: 1
+    ham: 0
+vectorizer:
+  _target_: ods_mlops.sms_cls.vectorizer.TfIdfVectorizer
+model:
+  inner_estimator:
+    _target_: sklearn.linear_model.LogisticRegression
+    random_state: 123324
+    C: 100
+    class_weight: balanced
+  cls:
+    _target_: ods_mlops.sms_cls.model.SkCls
+    vectorizer:
+      _target_: ods_mlops.sms_cls.vectorizer.TfIdfVectorizer
+    estimator:
+      _target_: sklearn.linear_model.LogisticRegression
+      random_state: 123324
+      C: 100
+      class_weight: balanced

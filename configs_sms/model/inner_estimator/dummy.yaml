@@ -1,0 +1,3 @@
+_target_: 'sklearn.dummy.DummyClassifier'
+strategy: 'prior'
+random_state: 20323498

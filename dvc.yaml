@@ -1,0 +1,42 @@
+stages:
+  split_data:
+    cmd: python ./sms_split_data.py -cd . -cn params
+    deps:
+    - ./sms_split_data.py
+    - ${data.raw_data_path}
+    - ./params.yaml
+    outs:
+    - ${data.split_dir}
+
+  preprocess:
+    cmd: python ./sms_preprocess.py -cd . -cn params
+    deps:
+      - ./sms_preprocess.py
+      - ./params.yaml
+      - ${data.split_dir}
+    outs:
+      - ${data.vectorized_dir}
+
+  train:
+    cmd: python ./sms_cls.py -cd . -cn params
+    deps:
+      - ./sms_cls.py
+      - ./params.yaml
+      - ${data.vectorized_dir}
+    plots:
+      - ${data.metrics_dir}/val/conf_matrix.csv:
+          template: confusion
+          x: predicted
+          y: actual
+      - ${data.metrics_dir}/test/conf_matrix.csv:
+          template: confusion
+          x: predicted
+          y: actual
+      - ${data.metrics_dir}/train/conf_matrix.csv:
+          template: confusion
+          x: predicted
+          y: actual
+    metrics:
+      - ${data.metrics_dir}/val/roc_auc.json
+      - ${data.metrics_dir}/test/roc_auc.json
+      - ${data.metrics_dir}/train/roc_auc.json
