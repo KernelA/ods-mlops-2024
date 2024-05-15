@@ -148,3 +148,5 @@ docs/
 .snakemake/
 outputs/
 dvc_plots/
+mlruns/
+mlartifacts/

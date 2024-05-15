@@ -1,13 +1,13 @@
 import pathlib
 from abc import ABC, abstractmethod
-from typing import Any, Tuple
+from typing import Any, Literal, Tuple
 
 import numpy as np
 import polars as pl
 from numpy import load, save
 from scipy.sparse import load_npz, save_npz
 from sklearn.decomposition import TruncatedSVD
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
 
 class BaseVectorizer(ABC):
@@ -32,9 +32,9 @@ class BaseVectorizer(ABC):
         pass
 
 
-class TfIdfVectorizer:
-    def __init__(self):
-        self._vectorizer = TfidfVectorizer()
+class Vectorizer:
+    def __init__(self, stat_type: Literal["count", "tfidf"]):
+        self._vectorizer = TfidfVectorizer() if stat_type == "tfidf" else CountVectorizer()
 
     def _vec_train(self, train: pl.DataFrame):
         return self._vectorizer.fit_transform((row["text"] for row in train.iter_rows(named=True)))
@@ -67,9 +67,9 @@ class TfIdfVectorizer:
         pass
 
 
-class SVDVectorizer(TfIdfVectorizer):
+class SVDVectorizer(Vectorizer):
     def __init__(self, n_components: int, n_iter: int, random_state: int):
-        super().__init__()
+        super().__init__("tfidf")
         self._svd = TruncatedSVD(
             n_components=n_components, n_iter=n_iter, random_state=random_state
         )
