@@ -6,20 +6,26 @@ import sklearnex
 sklearnex.patch_sklearn()
 
 import hydra
-import numpy as np
 import polars as pl
-from omegaconf import DictConfig
+import seaborn as sea
+from flatten_dict import flatten
+from matplotlib import pyplot as plt
+from omegaconf import DictConfig, OmegaConf
 from sklearn.metrics import confusion_matrix, roc_auc_score
 
+from ods_mlops.exp_loggers.base_logger import BaseExpLogger
 from ods_mlops.sms_cls.model import BaseModel
 
 
 @hydra.main(config_path="configs_sms", config_name="train", version_base="1.3")
 def main(config: DictConfig):
+    exp_logger: BaseExpLogger = hydra.utils.instantiate(config.exp_logger)
     vect_dir = pathlib.Path(config.data.vectorized_dir)
     model: BaseModel = hydra.utils.instantiate(config.model.cls)
 
     model.fit(vect_dir / "train")
+
+    exp_logger.init()
 
     for split_type in ("train", "test", "val"):
         predict = model.predict(vect_dir / split_type)
@@ -51,8 +57,31 @@ def main(config: DictConfig):
 
         roc_auc = roc_auc_score(predict.true_labels, predict.predicted_scores)
 
+        exp_logger.log_params(
+            flatten(
+                OmegaConf.to_container(config, resolve=True, enum_to_str=True),
+                reducer="dot",
+                enumerate_types=(list,),
+            )
+        )
+
+        fig = plt.figure(figsize=(10, 10), dpi=150)
+        ax = fig.add_subplot(111)
+        sea.heatmap(
+            matrix,
+            xticklabels=class_labels,
+            yticklabels=class_labels,
+            annot=True,
+            square=True,
+            cmap=sea.color_palette("coolwarm", as_cmap=True),
+            ax=ax,
+        )
+        exp_logger.log_figure(ax.get_figure(), f"{split_type}_conf_matrix.png")
+
         with open(metric_dir / "roc_auc.json", "w", encoding="utf-8") as f:
-            json.dump({f"{split_type}_roc_auc": roc_auc}, f)
+            metric = {f"{split_type}_roc_auc": roc_auc}
+            exp_logger.log_metric(f"{split_type}_roc_auc", metric[f"{split_type}_roc_auc"])
+            json.dump(metric, f)
 
 
 if __name__ == "__main__":
