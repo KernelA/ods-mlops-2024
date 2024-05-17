@@ -1,8 +1,8 @@
-raw_data_path: data/dvc/raw/sms+spam+collection.zip
-fsspec_path: zip://SMSSpamCollection::file://${.raw_data_path}
+raw_data_path: data/dvc/raw/sentiment+labelled+sentences.zip
+fsspec_path: zip::file://${.raw_data_path}
 split_dir: data/dvc/data
 vectorized_dir:  data/dvc/vectorized
 metrics_dir: data/dvc/metrics
 class_mapping:
-  spam: 1
-  ham: 0
+  positive: 1
+  negative: 0

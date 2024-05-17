@@ -2,7 +2,7 @@
 # It is not intended for manual editing.
 
 [metadata]
-groups = ["default", "dev", "eda", "notebook", "mlflow"]
+groups = ["default", "dev", "eda", "mlflow", "notebook"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
 content_hash = "sha256:0f5b6b0b81fbff9df4743cea9a3bc24959045672da6bc18097e2014b3414ac02"
@@ -868,7 +868,7 @@ files = [
 
 [[package]]
 name = "dvc"
-version = "3.50.1"
+version = "3.50.2"
 requires_python = ">=3.9"
 summary = "Git for data scientists - manage your code and data together"
 groups = ["default"]
@@ -917,8 +917,8 @@ dependencies = [
     "zc-lockfile>=1.2.1",
 ]
 files = [
-    {file = "dvc-3.50.1-py3-none-any.whl", hash = "sha256:c272d05d8d093564053132a2f41efbf22a3a0c8c0a67104cb25e3f483770f55c"},
-    {file = "dvc-3.50.1.tar.gz", hash = "sha256:97c92a530da38ea08f1cfad6ec7ad7ad1abf55887eb243d10b789123131616f9"},
+    {file = "dvc-3.50.2-py3-none-any.whl", hash = "sha256:fca38ee17c02f4a5450d71a36d4e8b72635b45fdfbb582892695eba9ba5690bc"},
+    {file = "dvc-3.50.2.tar.gz", hash = "sha256:b8e12d3521391ae839b8f38ea807d6f88699c570806f4bfdf4fff3733f87a1cc"},
 ]
 
 [[package]]
@@ -1035,18 +1035,18 @@ files = [
 
 [[package]]
 name = "dvc"
-version = "3.50.1"
+version = "3.50.2"
 extras = ["gdrive"]
 requires_python = ">=3.9"
 summary = "Git for data scientists - manage your code and data together"
 groups = ["default"]
 dependencies = [
     "dvc-gdrive<4,>=3",
-    "dvc==3.50.1",
+    "dvc==3.50.2",
 ]
 files = [
-    {file = "dvc-3.50.1-py3-none-any.whl", hash = "sha256:c272d05d8d093564053132a2f41efbf22a3a0c8c0a67104cb25e3f483770f55c"},
-    {file = "dvc-3.50.1.tar.gz", hash = "sha256:97c92a530da38ea08f1cfad6ec7ad7ad1abf55887eb243d10b789123131616f9"},
+    {file = "dvc-3.50.2-py3-none-any.whl", hash = "sha256:fca38ee17c02f4a5450d71a36d4e8b72635b45fdfbb582892695eba9ba5690bc"},
+    {file = "dvc-3.50.2.tar.gz", hash = "sha256:b8e12d3521391ae839b8f38ea807d6f88699c570806f4bfdf4fff3733f87a1cc"},
 ]
 
 [[package]]

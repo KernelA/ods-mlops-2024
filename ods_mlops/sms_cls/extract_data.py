@@ -10,8 +10,17 @@ def extract_data(file_object: io.TextIOWrapper, class_mapping: dict) -> pl.DataF
     for line in map(str.strip, file_object):
         if not line:
             continue
-        label, text = line.split("\t", maxsplit=1)
-        messages.append((label.strip().lower(), normalize("NFKD", text)))
 
-    data = pl.from_records(messages, schema={"target": pl.String, "text": pl.String})
-    return data.with_columns(pl.col("target").map_dict(class_mapping, return_dtype=pl.Int8))
+        index = -1
+        for i, c in enumerate(line):
+            if c == "\t":
+                index = i
+
+        if index == -1:
+            continue
+
+        text, label = line[:index], line[index + 1 :]
+        messages.append((int(label.strip().lower()), normalize("NFKD", text.strip())))
+
+    data = pl.from_records(messages, schema={"target": pl.Int8, "text": pl.String})
+    return data
