@@ -8,5 +8,5 @@ defaults:
   - data: sms
   - vectorizer: tfidf
   - model: sklearn_logreg
-  - exp_logger: mlflow
+  - exp_logger: clearml
   - _self_
