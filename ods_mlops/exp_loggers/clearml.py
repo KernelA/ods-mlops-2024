@@ -18,6 +18,7 @@ class ClearMLExpLogger(BaseExpLogger):
             auto_connect_frameworks=False,
             auto_resource_monitoring=False,
             auto_connect_streams=False,
+            reuse_last_task_id=False,
         )
 
     def log_params(self, params: Dict[str, Any]):
