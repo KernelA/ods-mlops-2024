@@ -11,7 +11,15 @@ def extract_data(file_object: Iterable[str], class_mapping: dict) -> pl.DataFram
         if not line:
             continue
 
-        text, label = line.split("\t")
+        index = -1
+        for i, c in enumerate(line):
+            if c == "\t":
+                index = i
+
+        if index == -1:
+            continue
+
+        text, label = line[:index], line[index + 1 :]
         messages.append((int(label.strip().lower()), normalize("NFKD", text.strip())))
 
     data = pl.from_records(messages, schema={"target": pl.Int8, "text": pl.String})
