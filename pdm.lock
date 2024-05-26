@@ -5,7 +5,7 @@
 groups = ["default", "dev", "eda", "mlflow", "notebook", "clearml"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:896ad2045a0ade55c3691f733e51065430ce4ea7da57e3b97f0e86b3b0454158"
+content_hash = "sha256:ed9b931651f3e14f8ee6a13818ce325ceb30e924a3ae8e6d3ae8c4451afa16d6"
 
 [[package]]
 name = "aiohttp"
@@ -236,7 +236,7 @@ name = "attrs"
 version = "23.2.0"
 requires_python = ">=3.7"
 summary = "Classes Without Boilerplate"
-groups = ["clearml", "default", "notebook"]
+groups = ["clearml", "default", "dev", "notebook"]
 files = [
     {file = "attrs-23.2.0-py3-none-any.whl", hash = "sha256:99b87a485a5820b23b879f04c2305b44b951b502fd64be915879d77a7e8fc6f1"},
     {file = "attrs-23.2.0.tar.gz", hash = "sha256:935dc3b529c262f6cf76e50877d35a4bd3c1de194fd41f47a2b7ae8f19971f30"},
@@ -1605,6 +1605,38 @@ files = [
 ]
 
 [[package]]
+name = "hypothesis"
+version = "6.102.6"
+requires_python = ">=3.8"
+summary = "A library for property-based testing"
+groups = ["dev"]
+dependencies = [
+    "attrs>=22.2.0",
+    "exceptiongroup>=1.0.0; python_version < \"3.11\"",
+    "sortedcontainers<3.0.0,>=2.1.0",
+]
+files = [
+    {file = "hypothesis-6.102.6-py3-none-any.whl", hash = "sha256:ef281ba8b2626ebade9f463fbe8851ae6ff6ae4a8621a9e54c7c2477a97ccff0"},
+    {file = "hypothesis-6.102.6.tar.gz", hash = "sha256:ef5655b4ca349082241ab55f899a34ea6d75cc336a7b07356680909059db1349"},
+]
+
+[[package]]
+name = "hypothesis"
+version = "6.102.6"
+extras = ["numpy"]
+requires_python = ">=3.8"
+summary = "A library for property-based testing"
+groups = ["dev"]
+dependencies = [
+    "hypothesis==6.102.6",
+    "numpy>=1.17.3",
+]
+files = [
+    {file = "hypothesis-6.102.6-py3-none-any.whl", hash = "sha256:ef281ba8b2626ebade9f463fbe8851ae6ff6ae4a8621a9e54c7c2477a97ccff0"},
+    {file = "hypothesis-6.102.6.tar.gz", hash = "sha256:ef5655b4ca349082241ab55f899a34ea6d75cc336a7b07356680909059db1349"},
+]
+
+[[package]]
 name = "identify"
 version = "2.5.35"
 requires_python = ">=3.8"
@@ -2295,7 +2327,7 @@ name = "numpy"
 version = "1.26.4"
 requires_python = ">=3.9"
 summary = "Fundamental package for array computing in Python"
-groups = ["clearml", "default", "mlflow"]
+groups = ["clearml", "default", "dev", "mlflow"]
 files = [
     {file = "numpy-1.26.4-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:9ff0f4f29c51e2803569d7a51c2304de5554655a60c5d776e35b4a41413830d0"},
     {file = "numpy-1.26.4-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:2e4ee3380d6de9c9ec04745830fd9e2eccb3e6cf790d39d7b98ffd19b0dd754a"},
@@ -3721,6 +3753,16 @@ dependencies = [
 ]
 files = [
     {file = "snakemake-7.32.4.tar.gz", hash = "sha256:fdc3f15dd7b06fabb7da30d460e0a3b1fba08e4ea91f9c32c47a83705cdc7b6e"},
+]
+
+[[package]]
+name = "sortedcontainers"
+version = "2.4.0"
+summary = "Sorted Containers -- Sorted List, Sorted Dict, Sorted Set"
+groups = ["dev"]
+files = [
+    {file = "sortedcontainers-2.4.0-py2.py3-none-any.whl", hash = "sha256:a163dcaede0f1c021485e957a39245190e74249897e2ae4b2aa38595db237ee0"},
+    {file = "sortedcontainers-2.4.0.tar.gz", hash = "sha256:25caa5a06cc30b6b83d11423433f65d1f9d76c4c6a0c90e3379eaa43b9bfdb88"},
 ]
 
 [[package]]

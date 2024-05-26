@@ -47,6 +47,7 @@ dev = [
     "pytest~=8.1",
     "pre-commit~=3.7",
     "kaggle>=1.6.12",
+    "hypothesis[numpy]>=6.102.6",
 ]
 
 [tool.ruff.lint]
