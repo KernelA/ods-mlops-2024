@@ -1,0 +1,2 @@
+_target_: 'ods_mlops.exp_loggers.clearml.ClearMLExpLogger'
+exp_name: 'Spam classifications'

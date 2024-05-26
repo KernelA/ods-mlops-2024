@@ -3,38 +3,26 @@ split_info:
   train_size: 0.7
   val_size: 0.4
 data:
-  raw_data_path: data/dvc/raw/sms+spam+collection.zip
-  fsspec_path: zip://SMSSpamCollection::file://data/dvc/raw/sms+spam+collection.zip
+  raw_data_path: data/dvc/raw/sentiment+labelled+sentences.zip
+  fsspec_path: zip::file://data/dvc/raw/sentiment+labelled+sentences.zip
   split_dir: data/dvc/data
   vectorized_dir: data/dvc/vectorized
   metrics_dir: data/dvc/metrics
   class_mapping:
-    spam: 1
-    ham: 0
+    positive: 1
+    negative: 0
 vectorizer:
-  _target_: ods_mlops.sms_cls.vectorizer.SVDVectorizer
-  n_components: 300
-  n_iter: 6
-  random_state: 23239
+  _target_: ods_mlops.sms_cls.vectorizer.Vectorizer
+  stat_type: tfidf
 model:
-  inner_estimator:
-    _target_: sklearn.ensemble.RandomForestClassifier
-    n_estimators: 100
-    max_depth: 6
-    random_state: 292392340
-    n_jobs: -1
-    class_weight: balanced
   cls:
     _target_: ods_mlops.sms_cls.model.SkCls
     vectorizer:
-      _target_: ods_mlops.sms_cls.vectorizer.SVDVectorizer
-      n_components: 300
-      n_iter: 6
-      random_state: 23239
+      _target_: ods_mlops.sms_cls.vectorizer.Vectorizer
+      stat_type: tfidf
     estimator:
-      _target_: sklearn.ensemble.RandomForestClassifier
-      n_estimators: 100
-      max_depth: 6
-      random_state: 292392340
-      n_jobs: -1
-      class_weight: balanced
+      _target_: sklearn.naive_bayes.MultinomialNB
+exp_logger:
+  _target_: ods_mlops.exp_loggers.mlflow.MLflowLogger
+  exp_name: SMS classifications
+  tracking_url: http://127.0.0.1:8080

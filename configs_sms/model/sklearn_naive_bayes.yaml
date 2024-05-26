@@ -1,0 +1,5 @@
+cls:
+  _target_: 'ods_mlops.sms_cls.model.SkCls'
+  vectorizer: ${vectorizer}
+  estimator: 
+    _target_: sklearn.naive_bayes.MultinomialNB

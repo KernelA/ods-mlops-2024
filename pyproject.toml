@@ -35,12 +35,19 @@ notebook = [
     "ipywidgets~=8.1",
     "nbformat~=5.1.0",
 ]
+mlflow = [
+    "mlflow>=2.12.2",
+]
+clearml = [
+    "clearml>=1.16.0",
+]
 [tool.pdm.dev-dependencies]
 dev = [
     "ruff~=0.3.0",
     "pytest~=8.1",
     "pre-commit~=3.7",
     "kaggle>=1.6.12",
+    "hypothesis[numpy]>=6.102.6",
 ]
 
 [tool.ruff.lint]

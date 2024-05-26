@@ -1,0 +1,182 @@
+services:
+  # minio-s3:
+  #   image: quay.io/minio/minio:RELEASE.2022-11-11T03-44-20Z
+  #   command: server --console-address ":${WEB_UI:-9001}" /mnt/data1
+  #   environment:
+  #     - MINIO_ROOT_USER=root
+  #     - MINIO_ROOT_PASSWORD=asasasasasas
+  #   ports:
+  #     - '${MINIO_API_PORT:-9000}:9000'
+  #     - '${MINIO_WEB_UI_PORT:-9001}:9001'
+  #   volumes:
+  #     - minio-data1:/mnt/data1
+
+  apiserver:
+    command:
+      - apiserver
+    container_name: clearml-apiserver
+    image: allegroai/clearml:1.15.1-478
+    restart: unless-stopped
+    volumes:
+      - ./clearml/config:/opt/clearml/config:ro
+      - clearml-logs:/var/log/clearml
+      - clearml-file-server:/mnt/fileserver
+    depends_on:
+      - redis
+      - mongo
+      - elasticsearch
+      - fileserver
+    environment:
+      CLEARML_ELASTIC_SERVICE_HOST: elasticsearch
+      CLEARML_ELASTIC_SERVICE_PORT: 9200
+      CLEARML_ELASTIC_SERVICE_PASSWORD: ${ELASTIC_PASSWORD:-ajsdaaskd}
+      CLEARML_MONGODB_SERVICE_HOST: mongo
+      CLEARML_MONGODB_SERVICE_PORT: 27017
+      CLEARML_REDIS_SERVICE_HOST: redis
+      CLEARML_REDIS_SERVICE_PORT: 6379
+      CLEARML_USE_GUNICORN: "true"
+      CLEARML_SERVER_DEPLOYMENT_TYPE: ${CLEARML_SERVER_DEPLOYMENT_TYPE:-linux}
+      CLEARML__apiserver__pre_populate__enabled: "true"
+      CLEARML__apiserver__pre_populate__zip_files: "/opt/clearml/db-pre-populate"
+      CLEARML__apiserver__pre_populate__artifacts_path: "/mnt/fileserver"
+    ports:
+      - "${CLEARML_API_PORT:-8008}:8008"
+    networks:
+      - backend
+      - frontend
+
+  elasticsearch:
+    image: elasticsearch:7.17.7
+    networks:
+      - backend
+    container_name: clearml-elastic
+    environment:
+      ES_JAVA_OPTS: -Xms2g -Xmx2g -Dlog4j2.formatMsgNoLookups=true
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-ajsdaaskd}
+      bootstrap.memory_lock: "true"
+      cluster.name: clearml
+      cluster.routing.allocation.node_initial_primaries_recoveries: "500"
+      cluster.routing.allocation.disk.watermark.low: 500mb
+      cluster.routing.allocation.disk.watermark.high: 500mb
+      cluster.routing.allocation.disk.watermark.flood_stage: 500mb
+      discovery.zen.minimum_master_nodes: "1"
+      discovery.type: "single-node"
+      http.compression_level: "7"
+      node.ingest: "true"
+      node.name: clearml
+      reindex.remote.whitelist: '*.*'
+      xpack.monitoring.enabled: "false"
+      xpack.security.enabled: "false"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    restart: unless-stopped
+    volumes:
+      - clearml-elastic-data:/usr/share/elasticsearch/data
+      - elastic-logs:/usr/share/elasticsearch/logs
+
+  fileserver:
+    networks:
+      - backend
+      - frontend
+    command:
+      - fileserver
+    container_name: clearml-fileserver
+    image: allegroai/clearml:1.15.1-478
+    restart: unless-stopped
+    environment:
+      CLEARML__fileserver__delete__allow_batch: "true"
+      FILESERVER_USE_GUNICORN: "true"
+    volumes:
+      - clearml-logs:/var/log/clearml
+      - clearml-file-server:/mnt/fileserver
+      - ./clearml/config:/opt/clearml/config:ro
+    ports:
+      - "${CLEARML_FILESERVER_PORT:-8081}:8081"
+
+  mongo:
+    networks:
+      - backend
+    container_name: clearml-mongo
+    image: mongo:4.4.9
+    restart: unless-stopped
+    command: --setParameter internalQueryMaxBlockingSortMemoryUsageBytes=196100200
+    volumes:
+      - mongo-db:/data/db
+      - mongo-db-config:/data/configdb
+
+  redis:
+    networks:
+      - backend
+    container_name: clearml-redis
+    image: redis:5.0
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+
+  webserver:
+    command:
+      - webserver
+    container_name: clearml-webserver
+    image: allegroai/clearml:1.15.1-478
+    restart: unless-stopped
+    volumes:
+      - clearml-logs:/var/log/clearml
+    depends_on:
+      - apiserver
+    ports:
+      - "${CLEARML_WEBIO_PORT:-8080}:80"
+    networks:
+      - backend
+      - frontend
+
+  async_delete:
+    depends_on:
+      - apiserver
+      - redis
+      - mongo
+      - elasticsearch
+      - fileserver
+    container_name: async_delete
+    image: allegroai/clearml:1.15.1-478
+    networks:
+      - backend
+    restart: unless-stopped
+    environment:
+      CLEARML_ELASTIC_SERVICE_HOST: elasticsearch
+      CLEARML_ELASTIC_SERVICE_PORT: 9200
+      CLEARML_ELASTIC_SERVICE_PASSWORD: ${ELASTIC_PASSWORD:-ajsdaaskd}
+      CLEARML_MONGODB_SERVICE_HOST: mongo
+      CLEARML_MONGODB_SERVICE_PORT: 27017
+      CLEARML_REDIS_SERVICE_HOST: redis
+      CLEARML_REDIS_SERVICE_PORT: 6379
+      PYTHONPATH: /opt/clearml/apiserver
+    entrypoint:
+      - python3
+      - -m
+      - jobs.async_urls_delete
+      - --fileserver-host
+      - http://fileserver:8081
+    volumes:
+      - clearml-logs:/var/log/clearml
+
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    name: frontend
+    driver: bridge
+
+volumes:
+  clearml-file-server:
+  clearml-logs:
+  clearml-elastic-data:
+  elastic-logs:
+  redis-data:
+  mongo-db:
+  mongo-db-config:
+

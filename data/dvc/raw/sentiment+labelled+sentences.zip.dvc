@@ -1,0 +1,5 @@
+outs:
+- md5: 232af95af524bc1e781d68efb89e0970
+  size: 84188
+  hash: md5
+  path: sentiment+labelled+sentences.zip

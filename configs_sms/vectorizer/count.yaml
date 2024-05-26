@@ -1,2 +1,2 @@
 _target_: 'ods_mlops.sms_cls.vectorizer.Vectorizer'
-stat_type: "tfidf"
+stat_type: "count"

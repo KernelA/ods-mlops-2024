@@ -1,0 +1,3 @@
+_target_: 'ods_mlops.exp_loggers.mlflow.MLflowLogger'
+exp_name: 'SMS classifications'
+tracking_url: 'http://127.0.0.1:8080'
