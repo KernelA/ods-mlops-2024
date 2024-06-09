@@ -1,0 +1,79 @@
+services:
+  redis:
+    image: redis:7.0.15-alpine3.20
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    ports:
+      - '6379:6379'
+  
+  worker:
+    image: ods-mlops-web
+    environment: &common-env
+      ML_APP_BROKER_URL: "amqp://user:pass@rabbitmq:5672/host"
+      ML_APP_BACKEND_URL: "redis://redis"
+    depends_on:
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    build: 
+      context: ..
+    command: celery -A ods_mlops.web.worker worker --concurrency=1 --loglevel=info
+  
+  flower:
+    image: ods_mlops_web
+    restart: unless-stopped
+    environment:
+      <<: *common-env
+    depends_on:
+      worker:
+        condition: service_started
+    build: 
+      context: ..
+    command: celery -A ods_mlops.web.worker flower
+    ports:
+      - "5555:5555"
+
+  server:
+    image: ods-mlops-web
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      start_interval: 5s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    environment:
+      <<: *common-env
+    depends_on:
+      worker:
+        condition: service_started
+    build: 
+      context: ..
+    command: uvicorn ods_mlops.web.app:app --host 0.0.0.0 --port 80
+    ports:
+      - '8080:80'
+
+  rabbitmq:
+    image: rabbitmq:3.13.3-management
+    restart: unless-stopped
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    environment:
+      RABBITMQ_DEFAULT_PASS: pass
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_VHOST: host
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbit_mq_data:/var/lib/rabbitmq/mnesia
+
+volumes:
+  rabbit_mq_data:

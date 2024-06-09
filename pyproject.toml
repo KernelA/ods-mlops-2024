@@ -12,8 +12,13 @@ readme = "README.md"
 classifiers = [ "Intended Audience :: Developers", "Programming Language :: Python :: 3" ]
 dependencies = [
     "pyyaml",
-    "hydra-core~=1.3.2",
+    "fsspec~=2024.3.0",
+]
+
+[project.optional-dependencies]
+ml = [
     "snakemake~=7.32",
+    "hydra-core~=1.3.2",
     "pulp~=2.7.0",
     "polars~=0.20.19",
     "scikit-learn~=1.4.0",
@@ -23,10 +28,7 @@ dependencies = [
     "mplcairo>=0.5",
     "seaborn~=0.13.2",
     "dvc[gdrive]~=3.50",
-    "fsspec~=2024.3.0",
 ]
-
-[project.optional-dependencies]
 eda = [
     "plotly~=5.20.0",
 ]
@@ -41,6 +43,15 @@ mlflow = [
 clearml = [
     "clearml>=1.16.0",
 ]
+web = [
+    "fastapi~=0.111.0",
+    "torch==2.3.1+cpu",
+    "celery[redis]~=5.4.0",
+    "pydantic-settings~=2.3.1",
+    "flower~=2.0.1",
+    "transformers~=4.41.2",
+    "huggingface-hub[cli]>=0.23.3",
+]
 [tool.pdm.dev-dependencies]
 dev = [
     "ruff~=0.3.0",
@@ -49,6 +60,11 @@ dev = [
     "kaggle>=1.6.12",
     "hypothesis[numpy]>=6.102.6",
 ]
+
+[[tool.pdm.source]]
+name = "torch"
+url = "https://download.pytorch.org/whl/cpu"
+include_packages = ["torch"]
 
 [tool.ruff.lint]
 ignore = ["F401", "F403", "E402"]
@@ -90,5 +106,4 @@ docstring-code-format = true
 
 [tool.pdm.options]
 add = ["--no-isolation", "--no-self", "--update-reuse"]
-install = ["--no-self"]
 lock = ["--update-reuse"]
