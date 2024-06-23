@@ -60,6 +60,9 @@ snakemake --cores --report ./report/snake.html
 quarto render
 ```
 
+## Kubernetes
+
+[Nginx ingress](info/kubernetes.md)
 
 ## Работа с ветками
 
