@@ -29,5 +29,6 @@ jobs:
             pdm run dvc repro train
     
       - name: Check file
-        run: git status -s
+        run: |
+          git diff --minimal
         

@@ -8,6 +8,15 @@ on:
       - dvc.lock
   workflow_dispatch:
 
+
+permissions:
+  pull-requests: write
+
+
+env:
+  DVC_NO_ANALYTICS: "1"
+  BASE_BRANCH: ${{ github.base_ref }}
+
 jobs:
   send-report:
     runs-on: ubuntu-latest
@@ -36,29 +45,31 @@ jobs:
         env:
           GDRIVE_CREDENTIALS_DATA: ${{ secrets.DVC_DATA_SECRET }}
         run: |
-          dvc remote modify main --local gdrive_use_service_account true
-          dvc pull train
+          pdm run dvc remote modify main --local gdrive_use_service_account true
+          git fetch --depth=1 origin  ${{ env.BASE_BRANCH }}:${{ env.BASE_BRANCH }}
+          pdm run dvc pull -a --run-cache train
 
       - name: Send CML report
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BASE_BRANCH: 'dvc-base-model'
+          GDRIVE_CREDENTIALS_DATA: ${{ secrets.DVC_DATA_SECRET }}
         run: |
           echo << EOF >  report.md
           # Metrics
           EOF
 
-          dvc metrics diff ${{ env.BASE_BRANCH }} --md >> report.md
+          pdm run dvc metrics diff --md ${{ env.BASE_BRANCH }} >> report.md
 
           echo << EOF >> report.md
           # Plots 
           EOF
 
-          for splitType in ('train' 'val' 'split')
+          for splitType in 'train' 'val' 'test'
           do
-            dvc plots diff --targets data/dvc/metrics/${splitType}/conf_matrix.csv --show-vega ${{ env.BASE_BRANCH }} | vl2png -s 1 > ${spliType}_plot.png
-            echo "## ${splitType}" >> report.md
-            echo '![](./plot.png "Confusion Matrix")' >> report.md
+            pdm run dvc plots diff --template dvc_templates/conf.json --targets data/dvc/metrics/$splitType/conf_matrix.csv --show-vega ${{ env.BASE_BRANCH }} > vega.json
+            vl2png -s 2 vega.json "$splitType"_plot.png
+            echo "## $splitType" >> report.md
+            echo '![](./'"$splitType"'_plot.png "Confusion Matrix")' >> report.md
           done
 
           cml comment create report.md
